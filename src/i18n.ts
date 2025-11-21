@@ -8,13 +8,31 @@ const resources = {
     en: {
         translation: {
             "Welcome to cubicular": "Welcome to cubicular: a free invoice generator for everyone",
-            "pickUpColor": "change color"
+            "pickUpColor": "change color",
+            "to": "To:",
+            "invoiceNumber": "Invoice No.",
+            "date": "Date",
+            "dueDate": "Due Date",
+            "clientName": "Client's Name",
+            "clientAddress": "Client's Address",
+            "cityStateZip": "City, State Zip",
+            "country": "Country",
+            "aditionalInfo": "Aditional Info"
         }
     },
     es: {
         translation: {
             "Welcome to cubicular": "Bienvenido a cubicular: un sistema de recivos gratis para todos",
-            "pickUpColor": "cambiar color"
+            "pickUpColor": "cambiar color",
+            "to": "Para:",
+            "invoiceNumber": "Cotización N.",
+            "date": "Fecha",
+            "dueDate": "Vencimiento",
+            "clientName": "Nombre del Cliente",
+            "clientAddress": "Dirección del Cliente",
+            "cityStateZip": "Ciudad, Estado Zip",
+            "country": "País",
+            "aditionalInfo": "Información Adicional"
         }
     }
 };

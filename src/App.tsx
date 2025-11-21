@@ -1,13 +1,15 @@
 import './App.css'
-import Navbar from './components/navbar'
+import Navbar from './components/Navbar'
+import InvoiceForm from './components/invoiceForm'
 
-function App() {  
+// Demo App component
+function App() {
   return (
-    <main className='p-4'>
-      <Navbar/>
-      
+    <main className='w-full min-h-screen flex flex-col gap-4'>
+      <Navbar />
+      <InvoiceForm />
     </main>
-  )
+  );
 }
 
-export default App
+export default App;
