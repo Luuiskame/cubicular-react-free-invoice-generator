@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import InvoiceSecondPart from './InvoiceSecondPart';
 
 
 export default function InvoiceForm() {
+    const { t } = useTranslation();
     const [logo, setLogo] = useState<string | null>(null);
 
     const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -16,16 +18,16 @@ export default function InvoiceForm() {
     };
 
     return (
-        <div className="w-[60%] mx-auto p-8 bg-white shadow-lg rounded-lg mt-10">
+        <div className="w-full lg:w-[60%] mx-auto p-8 bg-white shadow-lg rounded-lg mt-10">
             {/* Top Section: Logo and Invoice Title */}
             <div className="flex justify-between items-start mb-8">
                 {/* Logo Placeholder */}
-                <div className="w-48 h-32 bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center relative overflow-hidden group">
+                <div className="w-48 h-32 bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center relative overflow-hidden group hover:border-gray-400 transition-colors">
                     {logo ? (
                         <img src={logo} alt="Company Logo" className="w-full h-full object-contain" />
                     ) : (
                         <div className="text-center p-4">
-                            <p className="text-gray-400 text-sm font-medium">+ Add Logo</p>
+                            <p className="text-gray-400 text-sm font-medium">{t('addLogo')}</p>
                         </div>
                     )}
                     <input
@@ -37,17 +39,17 @@ export default function InvoiceForm() {
                 </div>
 
                 {/* Invoice Title / Extra Info */}
-                <div className="flex flex-col items-end">
+                <div className="flex flex-col items-end w-1/2">
                     <input
                         type="text"
-                        defaultValue="Invoice"
-                        className="text-4xl font-bold text-gray-400 text-right uppercase tracking-wide focus:outline-none focus:text-gray-600 placeholder-gray-300 w-full"
+                        defaultValue={t('invoiceTitle')}
+                        className="text-4xl font-bold text-gray-400 text-right uppercase tracking-wide focus:outline-none focus:text-gray-600 placeholder-gray-300 w-full border border-transparent hover:border-gray-200 focus:border-gray-300 rounded px-2 transition-all"
                     />
-                    <div className="mt-2">
+                    <div className="mt-2 w-full">
                         <input
                             type="text"
-                            placeholder="Add extra info (e.g. #INV-001)"
-                            className="text-right text-gray-500 focus:outline-none w-full"
+                            placeholder={t('invoiceExtraInfo')}
+                            className="text-right text-gray-500 focus:outline-none w-full border border-transparent hover:border-gray-200 focus:border-gray-300 rounded px-2 py-1 transition-all"
                         />
                     </div>
                 </div>
@@ -57,28 +59,28 @@ export default function InvoiceForm() {
             <div className="flex flex-col space-y-2 mb-10">
                 <input
                     type="text"
-                    placeholder="Company Name"
-                    className="text-xl font-bold text-gray-800 placeholder-gray-400 focus:outline-none w-full"
+                    placeholder={t('companyName')}
+                    className="text-xl font-bold text-gray-800 placeholder-gray-400 focus:outline-none w-full border border-transparent hover:border-gray-200 focus:border-gray-300 rounded px-2 py-1 transition-all"
                 />
                 <input
                     type="text"
-                    placeholder="Your Name"
-                    className="text-gray-600 placeholder-gray-400 focus:outline-none w-full"
+                    placeholder={t('yourName')}
+                    className="text-gray-600 placeholder-gray-400 focus:outline-none w-full border border-transparent hover:border-gray-200 focus:border-gray-300 rounded px-2 py-1 transition-all"
                 />
                 <input
                     type="text"
-                    placeholder="Company's Address"
-                    className="text-gray-600 placeholder-gray-400 focus:outline-none w-full"
+                    placeholder={t('companyAddress')}
+                    className="text-gray-600 placeholder-gray-400 focus:outline-none w-full border border-transparent hover:border-gray-200 focus:border-gray-300 rounded px-2 py-1 transition-all"
                 />
                 <input
                     type="text"
-                    placeholder="City, State Zip"
-                    className="text-gray-600 placeholder-gray-400 focus:outline-none w-full"
+                    placeholder={t('cityStateZip')}
+                    className="text-gray-600 placeholder-gray-400 focus:outline-none w-full border border-transparent hover:border-gray-200 focus:border-gray-300 rounded px-2 py-1 transition-all"
                 />
                 <input
                     type="text"
-                    placeholder="Country"
-                    className="text-gray-600 placeholder-gray-400 focus:outline-none w-full"
+                    placeholder={t('country')}
+                    className="text-gray-600 placeholder-gray-400 focus:outline-none w-full border border-transparent hover:border-gray-200 focus:border-gray-300 rounded px-2 py-1 transition-all"
                 />
             </div>
 

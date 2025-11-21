@@ -12,27 +12,27 @@ export default function InvoiceSecondPart() {
                     <input
                         type="text"
                         placeholder={t('clientName')}
-                        className="text-gray-700 placeholder-gray-400 focus:outline-none w-full border-b border-transparent focus:border-gray-300 transition-colors"
+                        className="text-gray-700 placeholder-gray-400 focus:outline-none w-full border border-transparent hover:border-gray-200 focus:border-gray-300 rounded px-2 py-1 transition-all"
                     />
                     <input
                         type="text"
                         placeholder={t('clientAddress')}
-                        className="text-gray-600 placeholder-gray-400 focus:outline-none w-full border-b border-transparent focus:border-gray-300 transition-colors"
+                        className="text-gray-600 placeholder-gray-400 focus:outline-none w-full border border-transparent hover:border-gray-200 focus:border-gray-300 rounded px-2 py-1 transition-all"
                     />
                     <input
                         type="text"
                         placeholder={t('cityStateZip')}
-                        className="text-gray-600 placeholder-gray-400 focus:outline-none w-full border-b border-transparent focus:border-gray-300 transition-colors"
+                        className="text-gray-600 placeholder-gray-400 focus:outline-none w-full border border-transparent hover:border-gray-200 focus:border-gray-300 rounded px-2 py-1 transition-all"
                     />
                     <input
                         type="text"
                         placeholder={t('country')}
-                        className="text-gray-600 placeholder-gray-400 focus:outline-none w-full border-b border-transparent focus:border-gray-300 transition-colors"
+                        className="text-gray-600 placeholder-gray-400 focus:outline-none w-full border border-transparent hover:border-gray-200 focus:border-gray-300 rounded px-2 py-1 transition-all"
                     />
                     <input
                         type="text"
                         placeholder={t('aditionalInfo')}
-                        className="text-gray-600 placeholder-gray-400 focus:outline-none w-full border-b border-transparent focus:border-gray-300 transition-colors"
+                        className="text-gray-600 placeholder-gray-400 focus:outline-none w-full border border-transparent hover:border-gray-200 focus:border-gray-300 rounded px-2 py-1 transition-all"
                     />
                 </div>
 
@@ -43,21 +43,21 @@ export default function InvoiceSecondPart() {
                         <input
                             type="text"
                             defaultValue="INV-12"
-                            className="text-right text-gray-600 focus:outline-none w-1/2 border-b border-transparent focus:border-gray-300 transition-colors"
+                            className="text-right text-gray-600 focus:outline-none w-1/2 border border-transparent hover:border-gray-200 focus:border-gray-300 rounded px-2 py-1 transition-all"
                         />
                     </div>
                     <div className="flex justify-between items-center">
                         <label className="font-bold text-gray-800">{t('date')}</label>
                         <input
                             type="date"
-                            className="text-right text-gray-600 focus:outline-none w-1/2 border-b border-transparent focus:border-gray-300 transition-colors"
+                            className="text-right text-gray-600 focus:outline-none w-1/2 border border-transparent hover:border-gray-200 focus:border-gray-300 rounded px-2 py-1 transition-all"
                         />
                     </div>
                     <div className="flex justify-between items-center">
                         <label className="font-bold text-gray-800">{t('dueDate')}</label>
                         <input
                             type="date"
-                            className="text-right text-gray-600 focus:outline-none w-1/2 border-b border-transparent focus:border-gray-300 transition-colors"
+                            className="text-right text-gray-600 focus:outline-none w-1/2 border border-transparent hover:border-gray-200 focus:border-gray-300 rounded px-2 py-1 transition-all"
                         />
                     </div>
                 </div>

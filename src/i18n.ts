@@ -17,7 +17,13 @@ const resources = {
             "clientAddress": "Client's Address",
             "cityStateZip": "City, State Zip",
             "country": "Country",
-            "aditionalInfo": "Aditional Info"
+            "aditionalInfo": "Aditional Info",
+            "addLogo": "+ Add Logo",
+            "invoiceTitle": "INVOICE",
+            "invoiceExtraInfo": "Add extra info (e.g. #INV-001)",
+            "companyName": "Company Name",
+            "yourName": "Your Name",
+            "companyAddress": "Company's Address"
         }
     },
     es: {
@@ -32,7 +38,13 @@ const resources = {
             "clientAddress": "Dirección del Cliente",
             "cityStateZip": "Ciudad, Estado Zip",
             "country": "País",
-            "aditionalInfo": "Información Adicional"
+            "aditionalInfo": "Información Adicional",
+            "addLogo": "+ Agregar Logo",
+            "invoiceTitle": "FACTURA",
+            "invoiceExtraInfo": "Información extra (ej. #INV-001)",
+            "companyName": "Nombre de la Empresa",
+            "yourName": "Tu Nombre",
+            "companyAddress": "Dirección de la Empresa"
         }
     }
 };
