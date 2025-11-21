@@ -1,22 +1,50 @@
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Trash2, Plus, X } from 'lucide-react';
 
-interface InvoiceItem {
+export interface InvoiceItem {
     id: number;
     description: string;
     quantity: number;
     price: number;
 }
 
-export default function InvoiceLastPart() {
+interface InvoiceLastPartProps {
+    items: InvoiceItem[];
+    onItemsChange: (items: InvoiceItem[]) => void;
+    discount: string | number;
+    onDiscountChange: (value: string | number) => void;
+    tax: string | number;
+    onTaxChange: (value: string | number) => void;
+    notes: string;
+    onNotesChange: (value: string) => void;
+    showDiscount: boolean;
+    onShowDiscountChange: (value: boolean) => void;
+    showTax: boolean;
+    onShowTaxChange: (value: boolean) => void;
+    currency: string;
+}
+
+const safeNumber = (value: string | number): number => {
+    const num = Number(value);
+    return Number.isFinite(num) ? num : 0;
+};
+
+export default function InvoiceLastPart({
+    items,
+    onItemsChange,
+    discount,
+    onDiscountChange,
+    tax,
+    onTaxChange,
+    notes,
+    onNotesChange,
+    showDiscount,
+    onShowDiscountChange,
+    showTax,
+    onShowTaxChange,
+    currency
+}: InvoiceLastPartProps) {
     const { t } = useTranslation();
-    const [items, setItems] = useState<InvoiceItem[]>([
-        { id: 1, description: 'Edecan', quantity: 3, price: 4460 }
-    ]);
-    const [discount, setDiscount] = useState<number>(0); // Percentage
-    const [tax, setTax] = useState<number>(0); // Percentage
-    const [showDiscount, setShowDiscount] = useState(false);
-    const [showTax, setShowTax] = useState(false);
 
     const handleAddItem = () => {
         const newItem: InvoiceItem = {
@@ -25,27 +53,40 @@ export default function InvoiceLastPart() {
             quantity: 1,
             price: 0
         };
-        setItems([...items, newItem]);
+        onItemsChange([...items, newItem]);
     };
 
     const handleRemoveItem = (id: number) => {
-        setItems(items.filter(item => item.id !== id));
+        onItemsChange(items.filter(item => item.id !== id));
     };
 
     const handleItemChange = (id: number, field: keyof InvoiceItem, value: string | number) => {
-        setItems(items.map(item =>
+        onItemsChange(items.map(item =>
             item.id === id ? { ...item, [field]: value } : item
         ));
     };
 
+    const handleRemoveDiscount = () => {
+        onDiscountChange('');
+        onShowDiscountChange(false);
+    };
+
+    const handleRemoveTax = () => {
+        onTaxChange('');
+        onShowTaxChange(false);
+    };
+
     const calculateSubTotal = () => {
-        return items.reduce((sum, item) => sum + (item.quantity * item.price), 0);
+        return items.reduce((sum, item) => sum + (safeNumber(item.quantity) * safeNumber(item.price)), 0);
     };
 
     const calculateTotal = () => {
         const subTotal = calculateSubTotal();
-        const discountAmount = subTotal * (discount / 100);
-        const taxAmount = (subTotal - discountAmount) * (tax / 100);
+        const discountValue = safeNumber(discount);
+        const taxValue = safeNumber(tax);
+
+        const discountAmount = subTotal * (discountValue / 100);
+        const taxAmount = (subTotal - discountAmount) * (taxValue / 100);
         return subTotal - discountAmount + taxAmount;
     };
 
@@ -80,7 +121,7 @@ export default function InvoiceLastPart() {
                                         type="number"
                                         value={item.quantity}
                                         onChange={(e) => handleItemChange(item.id, 'quantity', Number(e.target.value))}
-                                        className="w-full bg-transparent focus:outline-none text-center text-gray-700"
+                                        className="w-full bg-transparent focus:outline-none text-center text-gray-700 no-spinner"
                                     />
                                 </div>
                                 <div className="col-span-2">
@@ -88,11 +129,11 @@ export default function InvoiceLastPart() {
                                         type="number"
                                         value={item.price}
                                         onChange={(e) => handleItemChange(item.id, 'price', Number(e.target.value))}
-                                        className="w-full bg-transparent focus:outline-none text-right text-gray-700"
+                                        className="w-full bg-transparent focus:outline-none text-right text-gray-700 no-spinner"
                                     />
                                 </div>
                                 <div className="col-span-2 text-right pr-2 text-gray-700 font-medium">
-                                    {(item.quantity * item.price).toFixed(2)}
+                                    {(safeNumber(item.quantity) * safeNumber(item.price)).toFixed(2)}
                                 </div>
                                 <div className="col-span-1 text-center opacity-0 group-hover:opacity-100 transition-opacity">
                                     <button
@@ -100,9 +141,7 @@ export default function InvoiceLastPart() {
                                         className="text-red-400 hover:text-red-600 p-1 rounded-full hover:bg-red-50 transition-colors"
                                         title="Remove item"
                                     >
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                                        </svg>
+                                        <Trash2 className="w-5 h-5" />
                                     </button>
                                 </div>
                             </div>
@@ -118,9 +157,7 @@ export default function InvoiceLastPart() {
                                 onClick={() => handleRemoveItem(item.id)}
                                 className="absolute top-2 right-2 text-red-400 hover:text-red-600 p-1"
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
+                                <Trash2 className="w-5 h-5" />
                             </button>
                             <div className="mb-3 pr-6">
                                 <label className="block text-xs font-bold text-gray-500 uppercase mb-1">{t('item')}</label>
@@ -139,7 +176,7 @@ export default function InvoiceLastPart() {
                                         type="number"
                                         value={item.quantity}
                                         onChange={(e) => handleItemChange(item.id, 'quantity', Number(e.target.value))}
-                                        className="w-full bg-gray-50 border border-gray-200 rounded p-2 focus:outline-none focus:border-blue-500 text-center"
+                                        className="w-full bg-gray-50 border border-gray-200 rounded p-2 focus:outline-none focus:border-blue-500 text-center no-spinner"
                                     />
                                 </div>
                                 <div>
@@ -148,13 +185,13 @@ export default function InvoiceLastPart() {
                                         type="number"
                                         value={item.price}
                                         onChange={(e) => handleItemChange(item.id, 'price', Number(e.target.value))}
-                                        className="w-full bg-gray-50 border border-gray-200 rounded p-2 focus:outline-none focus:border-blue-500 text-right"
+                                        className="w-full bg-gray-50 border border-gray-200 rounded p-2 focus:outline-none focus:border-blue-500 text-right no-spinner"
                                     />
                                 </div>
                             </div>
                             <div className="mt-3 flex justify-between items-center pt-3 border-t border-gray-100">
                                 <span className="text-sm font-bold text-gray-500 uppercase">{t('amount')}</span>
-                                <span className="font-bold text-gray-800">{(item.quantity * item.price).toFixed(2)}</span>
+                                <span className="font-bold text-gray-800">{(safeNumber(item.quantity) * safeNumber(item.price)).toFixed(2)}</span>
                             </div>
                         </div>
                     ))}
@@ -164,7 +201,7 @@ export default function InvoiceLastPart() {
                     onClick={handleAddItem}
                     className="mt-4 text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1 transition-colors"
                 >
-                    <span>+</span> {t('addItem')}
+                    <Plus className="w-4 h-4" /> {t('addItem')}
                 </button>
             </div>
 
@@ -174,6 +211,8 @@ export default function InvoiceLastPart() {
                 <div className="w-full md:w-1/2">
                     <h4 className="font-bold text-gray-700 mb-2">{t('notes')}:</h4>
                     <textarea
+                        value={notes}
+                        onChange={(e) => onNotesChange(e.target.value)}
                         className="w-full h-24 p-3 border border-gray-200 rounded-lg focus:outline-none focus:border-gray-400 resize-none text-gray-600 text-sm"
                         placeholder={t('notesPlaceholder')}
                     ></textarea>
@@ -193,12 +232,20 @@ export default function InvoiceLastPart() {
                                 <input
                                     type="number"
                                     value={discount}
-                                    onChange={(e) => setDiscount(Number(e.target.value))}
-                                    className="w-12 border-b border-gray-300 text-center focus:outline-none text-sm"
+                                    onChange={(e) => onDiscountChange(e.target.value)}
+                                    className="w-12 border-b border-gray-300 text-center focus:outline-none text-sm no-spinner"
+                                    placeholder="0"
                                 />%
+                                <button
+                                    onClick={handleRemoveDiscount}
+                                    className="text-red-400 hover:text-red-600 ml-2"
+                                    title="Remove discount"
+                                >
+                                    <X className="w-4 h-4" />
+                                </button>
                             </span>
                             <span className="font-bold text-red-500">
-                                -{(calculateSubTotal() * (discount / 100)).toFixed(2)}
+                                -{(calculateSubTotal() * (safeNumber(discount) / 100)).toFixed(2)}
                             </span>
                         </div>
                     )}
@@ -210,12 +257,20 @@ export default function InvoiceLastPart() {
                                 <input
                                     type="number"
                                     value={tax}
-                                    onChange={(e) => setTax(Number(e.target.value))}
-                                    className="w-12 border-b border-gray-300 text-center focus:outline-none text-sm"
+                                    onChange={(e) => onTaxChange(e.target.value)}
+                                    className="w-12 border-b border-gray-300 text-center focus:outline-none text-sm no-spinner"
+                                    placeholder="0"
                                 />%
+                                <button
+                                    onClick={handleRemoveTax}
+                                    className="text-red-400 hover:text-red-600 ml-2"
+                                    title="Remove tax"
+                                >
+                                    <X className="w-4 h-4" />
+                                </button>
                             </span>
                             <span className="font-bold">
-                                +{((calculateSubTotal() - (calculateSubTotal() * (discount / 100))) * (tax / 100)).toFixed(2)}
+                                +{((calculateSubTotal() - (calculateSubTotal() * (safeNumber(discount) / 100))) * (safeNumber(tax) / 100)).toFixed(2)}
                             </span>
                         </div>
                     )}
@@ -223,13 +278,13 @@ export default function InvoiceLastPart() {
                     {/* Action Buttons */}
                     <div className="flex gap-4 text-sm text-blue-600 font-medium">
                         {!showDiscount && (
-                            <button onClick={() => setShowDiscount(true)} className="hover:underline">
-                                + {t('addDiscount')}
+                            <button onClick={() => onShowDiscountChange(true)} className="hover:underline flex items-center gap-1">
+                                <Plus className="w-3 h-3" /> {t('addDiscount')}
                             </button>
                         )}
                         {!showTax && (
-                            <button onClick={() => setShowTax(true)} className="hover:underline">
-                                + {t('addTax')}
+                            <button onClick={() => onShowTaxChange(true)} className="hover:underline flex items-center gap-1">
+                                <Plus className="w-3 h-3" /> {t('addTax')}
                             </button>
                         )}
                     </div>
@@ -238,7 +293,7 @@ export default function InvoiceLastPart() {
                     <div className="flex justify-between items-center bg-gray-100 p-3 rounded-lg mt-4">
                         <span className="font-bold text-gray-700 text-lg">{t('total')}</span>
                         <span className="font-bold text-gray-900 text-xl">
-                            lps {calculateTotal().toFixed(2)}
+                            {currency} {calculateTotal().toFixed(2)}
                         </span>
                     </div>
                 </div>

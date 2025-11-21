@@ -2,6 +2,16 @@ import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { Globe, Palette, Menu, X } from 'lucide-react';
 
+const languages = [
+  { code: 'en', label: 'English' },
+  { code: 'es', label: 'Español' },
+  { code: 'fr', label: 'Français' },
+  { code: 'de', label: 'Deutsch' },
+  { code: 'it', label: 'Italiano' },
+  { code: 'pt', label: 'Português' },
+  { code: 'zh', label: '中文' }
+];
+
 export default function Navbar() {
   const { t, i18n } = useTranslation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -47,19 +57,17 @@ export default function Navbar() {
               </button>
 
               {showLanguageOptions && (
-                <div className="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg py-1 z-50 ring-1 ring-black ring-opacity-5">
-                  <button
-                    onClick={() => toggleLanguage('en')}
-                    className="block w-full text-left px-4 py-2 text-sm text-black hover:bg-gray-100"
-                  >
-                    English
-                  </button>
-                  <button
-                    onClick={() => toggleLanguage('es')}
-                    className="block w-full text-left px-4 py-2 text-sm text-black hover:bg-gray-100"
-                  >
-                    Español
-                  </button>
+                <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg py-1 z-50 ring-1 ring-black ring-opacity-5 max-h-64 overflow-y-auto">
+                  {languages.map((lang) => (
+                    <button
+                      key={lang.code}
+                      onClick={() => toggleLanguage(lang.code)}
+                      className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${i18n.language === lang.code ? 'text-blue-600 font-bold' : 'text-black'
+                        }`}
+                    >
+                      {lang.label}
+                    </button>
+                  ))}
                 </div>
               )}
             </div>
@@ -92,20 +100,16 @@ export default function Navbar() {
               <p className="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
                 Language
               </p>
-              <button
-                onClick={() => toggleLanguage('en')}
-                className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium ${i18n.language === 'en' ? 'bg-red-500 text-black' : 'text-black hover:text-white hover:bg-gray-700'
-                  }`}
-              >
-                English
-              </button>
-              <button
-                onClick={() => toggleLanguage('es')}
-                className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium ${i18n.language === 'es' ? 'bg-red-500 text-black' : 'text-black hover:text-white hover:bg-gray-700'
-                  }`}
-              >
-                Español
-              </button>
+              {languages.map((lang) => (
+                <button
+                  key={lang.code}
+                  onClick={() => toggleLanguage(lang.code)}
+                  className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium ${i18n.language === lang.code ? 'bg-blue-600 text-white' : 'text-gray-300 hover:text-white hover:bg-gray-700'
+                    }`}
+                >
+                  {lang.label}
+                </button>
+              ))}
             </div>
           </div>
         </div>
