@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { Globe, Palette, Menu, X } from 'lucide-react';
+import ColorPicker from './ColorPicker';
 
 const languages = [
   { code: 'en', label: 'English' },
@@ -12,10 +13,17 @@ const languages = [
   { code: 'zh', label: '中文' }
 ];
 
-export default function Navbar() {
+interface NavbarProps {
+  primaryColor: string;
+  secondaryColor: string;
+  onColorChange: (primary: string, secondary: string) => void;
+}
+
+export default function Navbar({ primaryColor, secondaryColor, onColorChange }: NavbarProps) {
   const { t, i18n } = useTranslation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showLanguageOptions, setShowLanguageOptions] = useState(false);
+  const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
 
   useEffect(() => {
     document.title = t('Welcome to cubicular');
@@ -23,6 +31,7 @@ export default function Navbar() {
 
   const toggleLanguage = (lang: string) => {
     i18n.changeLanguage(lang);
+    localStorage.setItem('i18nextLng', lang);
     setShowLanguageOptions(false);
     setIsMobileMenuOpen(false);
   };
@@ -40,7 +49,8 @@ export default function Navbar() {
           <div className="hidden md:flex items-center space-x-4">
             {/* Color Picker Button */}
             <button
-              className="p-2 rounded-full hover:bg-gray-700 transition-colors text-indigo-400 hover:text-indigo-300"
+              onClick={() => setIsColorPickerOpen(true)}
+              className="p-2 rounded-full hover:bg-gray-700 transition-colors text-primary hover:text-primary/80"
               title={t('pickUpColor')}
             >
               <Palette size={24} />
@@ -62,7 +72,7 @@ export default function Navbar() {
                     <button
                       key={lang.code}
                       onClick={() => toggleLanguage(lang.code)}
-                      className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${i18n.language === lang.code ? 'text-blue-600 font-bold' : 'text-black'
+                      className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${i18n.language === lang.code ? 'text-primary font-bold' : 'text-black'
                         }`}
                     >
                       {lang.label}
@@ -90,6 +100,10 @@ export default function Navbar() {
         <div className="md:hidden bg-gray-800">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <button
+              onClick={() => {
+                setIsColorPickerOpen(true);
+                setIsMobileMenuOpen(false);
+              }}
               className="flex items-center w-full px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-white hover:bg-gray-700"
             >
               <Palette className="mr-2" size={20} />
@@ -104,7 +118,7 @@ export default function Navbar() {
                 <button
                   key={lang.code}
                   onClick={() => toggleLanguage(lang.code)}
-                  className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium ${i18n.language === lang.code ? 'bg-blue-600 text-white' : 'text-gray-300 hover:text-white hover:bg-gray-700'
+                  className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium ${i18n.language === lang.code ? 'bg-primary text-white' : 'text-gray-300 hover:text-white hover:bg-gray-700'
                     }`}
                 >
                   {lang.label}
@@ -114,6 +128,13 @@ export default function Navbar() {
           </div>
         </div>
       )}
+      <ColorPicker
+        isOpen={isColorPickerOpen}
+        onClose={() => setIsColorPickerOpen(false)}
+        primaryColor={primaryColor}
+        secondaryColor={secondaryColor}
+        onColorChange={onColorChange}
+      />
     </nav>
   );
 }

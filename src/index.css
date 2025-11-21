@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+@theme {
+  --color-primary: var(--color-primary);
+  --color-secondary: var(--color-secondary);
+}
+
+:root {
+  --color-primary: #1e3a8a;
+  /* Professional Navy Blue */
+  --color-secondary: #64748b;
+  /* Professional Slate Gray */
+}
+
 @layer utilities {
 
   /* Chrome, Safari, Edge, Opera */

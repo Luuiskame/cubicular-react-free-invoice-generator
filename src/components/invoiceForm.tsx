@@ -6,48 +6,106 @@ import InvoiceSecondPart from './InvoiceSecondPart';
 import InvoiceLastPart, { type InvoiceItem } from './InvoiceLastPart';
 import InvoicePDF from './invoicePDF';
 
-export default function InvoiceForm() {
+interface InvoiceFormProps {
+    primaryColor: string;
+    secondaryColor: string;
+}
+
+export default function InvoiceForm({ primaryColor, secondaryColor }: InvoiceFormProps) {
     const { t } = useTranslation();
-    const [logo, setLogo] = useState<string | null>(null);
+    const [logo, setLogo] = useState<string | null>(() => {
+        return localStorage.getItem('invoice-logo');
+    });
     const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
         setIsClient(true);
     }, []);
 
+    useEffect(() => {
+        if (logo) {
+            localStorage.setItem('invoice-logo', logo);
+        } else {
+            localStorage.removeItem('invoice-logo');
+        }
+    }, [logo]);
+
     // Company Info State
-    const [companyInfo, setCompanyInfo] = useState({
-        companyName: '',
-        yourName: '',
-        companyAddress: '',
-        cityStateZip: '',
-        country: ''
+    const [companyInfo, setCompanyInfo] = useState(() => {
+        const saved = localStorage.getItem('invoice-company-info');
+        return saved ? JSON.parse(saved) : {
+            companyName: '',
+            yourName: '',
+            companyAddress: '',
+            cityStateZip: '',
+            country: ''
+        };
     });
+
+    useEffect(() => {
+        localStorage.setItem('invoice-company-info', JSON.stringify(companyInfo));
+    }, [companyInfo]);
 
     // Client & Invoice Meta State
-    const [clientInfo, setClientInfo] = useState({
-        clientName: '',
-        clientAddress: '',
-        clientCityStateZip: '',
-        clientCountry: '',
-        clientAdditionalInfo: '',
-        invoiceNumber: 'INV-12',
-        date: '',
-        dueDate: ''
+    const [clientInfo, setClientInfo] = useState(() => {
+        const saved = localStorage.getItem('invoice-client-info');
+        const defaultState = {
+            clientName: '',
+            clientAddress: '',
+            clientCityStateZip: '',
+            clientCountry: '',
+            clientAdditionalInfo: '',
+            invoiceNumber: 'INV-12',
+            date: '',
+            dueDate: ''
+        };
+        if (saved) {
+            const parsed = JSON.parse(saved);
+            // Exclude date and dueDate from persistence as requested
+            return { ...parsed, date: '', dueDate: '' };
+        }
+        return defaultState;
     });
 
+    useEffect(() => {
+        // Save everything except date and dueDate
+        const { date, dueDate, ...infoToSave } = clientInfo;
+        localStorage.setItem('invoice-client-info', JSON.stringify(infoToSave));
+    }, [clientInfo]);
+
     // Items & Totals State
-    const [items, setItems] = useState<InvoiceItem[]>([
-        { id: 1, description: '', quantity: 0, price: 0 }
-    ]);
-    const [discount, setDiscount] = useState<string | number>('');
-    const [tax, setTax] = useState<string | number>('');
-    const [notes, setNotes] = useState('');
-    const [showDiscount, setShowDiscount] = useState(false);
-    const [showTax, setShowTax] = useState(false);
-    const [title, setTitle] = useState('');
-    const [extraInfo, setExtraInfo] = useState('');
-    const [currency, setCurrency] = useState('$');
+    const [items, setItems] = useState<InvoiceItem[]>(() => {
+        const saved = localStorage.getItem('invoice-items');
+        return saved ? JSON.parse(saved) : [{ id: 1, description: '', quantity: 0, price: 0 }];
+    });
+
+    useEffect(() => {
+        localStorage.setItem('invoice-items', JSON.stringify(items));
+    }, [items]);
+
+    const [discount, setDiscount] = useState<string | number>(() => localStorage.getItem('invoice-discount') || '');
+    const [tax, setTax] = useState<string | number>(() => localStorage.getItem('invoice-tax') || '');
+    const [discountLabel, setDiscountLabel] = useState(() => localStorage.getItem('invoice-discount-label') || 'Discount');
+    const [taxLabel, setTaxLabel] = useState(() => localStorage.getItem('invoice-tax-label') || 'Tax');
+    const [notes, setNotes] = useState(() => localStorage.getItem('invoice-notes') || '');
+    const [showDiscount, setShowDiscount] = useState(() => localStorage.getItem('invoice-show-discount') === 'true');
+    const [showTax, setShowTax] = useState(() => localStorage.getItem('invoice-show-tax') === 'true');
+    const [title, setTitle] = useState(() => localStorage.getItem('invoice-title') || '');
+    const [extraInfo, setExtraInfo] = useState(() => localStorage.getItem('invoice-extra-info') || '');
+    const [currency, setCurrency] = useState(() => localStorage.getItem('invoice-currency') || '$');
+
+    useEffect(() => {
+        localStorage.setItem('invoice-discount', String(discount));
+        localStorage.setItem('invoice-tax', String(tax));
+        localStorage.setItem('invoice-discount-label', discountLabel);
+        localStorage.setItem('invoice-tax-label', taxLabel);
+        localStorage.setItem('invoice-notes', notes);
+        localStorage.setItem('invoice-show-discount', String(showDiscount));
+        localStorage.setItem('invoice-show-tax', String(showTax));
+        localStorage.setItem('invoice-title', title);
+        localStorage.setItem('invoice-extra-info', extraInfo);
+        localStorage.setItem('invoice-currency', currency);
+    }, [discount, tax, discountLabel, taxLabel, notes, showDiscount, showTax, title, extraInfo, currency]);
 
     const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -168,6 +226,10 @@ export default function InvoiceForm() {
                 onDiscountChange={setDiscount}
                 tax={tax}
                 onTaxChange={setTax}
+                discountLabel={discountLabel}
+                onDiscountLabelChange={setDiscountLabel}
+                taxLabel={taxLabel}
+                onTaxLabelChange={setTaxLabel}
                 notes={notes}
                 onNotesChange={setNotes}
                 showDiscount={showDiscount}
@@ -189,14 +251,31 @@ export default function InvoiceForm() {
                                 items={items}
                                 discount={discount}
                                 tax={tax}
+                                discountLabel={discountLabel}
+                                taxLabel={taxLabel}
                                 notes={notes}
                                 title={title}
                                 extraInfo={extraInfo}
                                 currency={currency}
+                                primaryColor={primaryColor}
+                                secondaryColor={secondaryColor}
+                                labels={{
+                                    billTo: t('to'),
+                                    invoiceNumber: t('invoiceNumber'),
+                                    date: t('date'),
+                                    dueDate: t('dueDate'),
+                                    itemDescription: t('item'),
+                                    quantity: t('quantity'),
+                                    price: t('price'),
+                                    amount: t('amount'),
+                                    subTotal: t('subTotal'),
+                                    total: t('total'),
+                                    notes: t('notes')
+                                }}
                             />
                         }
                         fileName="invoice.pdf"
-                        className="flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors shadow-md font-medium text-base"
+                        className="flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-lg hover:opacity-90 transition-colors shadow-md font-medium text-base"
                     >
                         {({ loading }) => (loading ? 'Generating...' : <><Download className="w-5 h-5" /> {t('downloadPDF')}</>)}
                     </PDFDownloadLink>

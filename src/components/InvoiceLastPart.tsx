@@ -15,6 +15,10 @@ interface InvoiceLastPartProps {
     onDiscountChange: (value: string | number) => void;
     tax: string | number;
     onTaxChange: (value: string | number) => void;
+    discountLabel: string;
+    onDiscountLabelChange: (value: string) => void;
+    taxLabel: string;
+    onTaxLabelChange: (value: string) => void;
     notes: string;
     onNotesChange: (value: string) => void;
     showDiscount: boolean;
@@ -36,6 +40,10 @@ export default function InvoiceLastPart({
     onDiscountChange,
     tax,
     onTaxChange,
+    discountLabel,
+    onDiscountLabelChange,
+    taxLabel,
+    onTaxLabelChange,
     notes,
     onNotesChange,
     showDiscount,
@@ -96,7 +104,7 @@ export default function InvoiceLastPart({
             <div className="mb-8">
                 {/* Desktop View (Table) */}
                 <div className="hidden md:block">
-                    <div className="grid grid-cols-12 gap-4 bg-gray-600 text-white p-3 rounded-t-lg font-medium text-sm uppercase">
+                    <div className="grid grid-cols-12 gap-4 bg-secondary text-white p-3 rounded-t-lg font-medium text-sm uppercase">
                         <div className="col-span-5 pl-2">{t('item')}</div>
                         <div className="col-span-2 text-center">{t('quantity')}</div>
                         <div className="col-span-2 text-right">{t('price')}</div>
@@ -199,7 +207,7 @@ export default function InvoiceLastPart({
 
                 <button
                     onClick={handleAddItem}
-                    className="mt-4 text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1 transition-colors"
+                    className="mt-4 text-sm text-primary hover:text-primary/80 font-medium flex items-center gap-1 transition-colors"
                 >
                     <Plus className="w-4 h-4" /> {t('addItem')}
                 </button>
@@ -228,7 +236,12 @@ export default function InvoiceLastPart({
                     {showDiscount && (
                         <div className="flex justify-between text-gray-600 items-center">
                             <span className="flex items-center gap-2">
-                                {t('discount')}
+                                <input
+                                    type="text"
+                                    value={discountLabel}
+                                    onChange={(e) => onDiscountLabelChange(e.target.value)}
+                                    className="w-20 border-b border-transparent hover:border-gray-300 focus:border-gray-300 focus:outline-none text-right text-gray-600"
+                                />
                                 <input
                                     type="number"
                                     value={discount}
@@ -253,7 +266,12 @@ export default function InvoiceLastPart({
                     {showTax && (
                         <div className="flex justify-between text-gray-600 items-center">
                             <span className="flex items-center gap-2">
-                                {t('tax')}
+                                <input
+                                    type="text"
+                                    value={taxLabel}
+                                    onChange={(e) => onTaxLabelChange(e.target.value)}
+                                    className="w-20 border-b border-transparent hover:border-gray-300 focus:border-gray-300 focus:outline-none text-right text-gray-600"
+                                />
                                 <input
                                     type="number"
                                     value={tax}
@@ -276,7 +294,7 @@ export default function InvoiceLastPart({
                     )}
 
                     {/* Action Buttons */}
-                    <div className="flex gap-4 text-sm text-blue-600 font-medium">
+                    <div className="flex gap-4 text-sm text-primary font-medium">
                         {!showDiscount && (
                             <button onClick={() => onShowDiscountChange(true)} className="hover:underline flex items-center gap-1">
                                 <Plus className="w-3 h-3" /> {t('addDiscount')}
