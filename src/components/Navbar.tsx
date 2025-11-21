@@ -42,7 +42,7 @@ export default function Navbar({ primaryColor, secondaryColor, onColorChange }: 
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <p className="text-2xl font-bold tracking-wider">Cubicular</p>
+            <p className="text-2xl font-bold tracking-wider">InvoiceHood</p>
           </div>
 
           {/* Desktop Menu */}
