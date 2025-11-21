@@ -4,8 +4,8 @@ import { Trash2, Plus, X } from 'lucide-react';
 export interface InvoiceItem {
     id: number;
     description: string;
-    quantity: number;
-    price: number;
+    quantity: number | string;
+    price: number | string;
 }
 
 interface InvoiceLastPartProps {
@@ -128,7 +128,7 @@ export default function InvoiceLastPart({
                                     <input
                                         type="number"
                                         value={item.quantity}
-                                        onChange={(e) => handleItemChange(item.id, 'quantity', Number(e.target.value))}
+                                        onChange={(e) => handleItemChange(item.id, 'quantity', e.target.value)}
                                         className="w-full bg-transparent focus:outline-none text-center text-gray-700 no-spinner"
                                     />
                                 </div>
@@ -136,7 +136,7 @@ export default function InvoiceLastPart({
                                     <input
                                         type="number"
                                         value={item.price}
-                                        onChange={(e) => handleItemChange(item.id, 'price', Number(e.target.value))}
+                                        onChange={(e) => handleItemChange(item.id, 'price', e.target.value)}
                                         className="w-full bg-transparent focus:outline-none text-right text-gray-700 no-spinner"
                                     />
                                 </div>
@@ -183,7 +183,7 @@ export default function InvoiceLastPart({
                                     <input
                                         type="number"
                                         value={item.quantity}
-                                        onChange={(e) => handleItemChange(item.id, 'quantity', Number(e.target.value))}
+                                        onChange={(e) => handleItemChange(item.id, 'quantity', e.target.value)}
                                         className="w-full bg-gray-50 border border-gray-200 rounded p-2 focus:outline-none focus:border-blue-500 text-center no-spinner"
                                     />
                                 </div>
@@ -192,7 +192,7 @@ export default function InvoiceLastPart({
                                     <input
                                         type="number"
                                         value={item.price}
-                                        onChange={(e) => handleItemChange(item.id, 'price', Number(e.target.value))}
+                                        onChange={(e) => handleItemChange(item.id, 'price', e.target.value)}
                                         className="w-full bg-gray-50 border border-gray-200 rounded p-2 focus:outline-none focus:border-blue-500 text-right no-spinner"
                                     />
                                 </div>

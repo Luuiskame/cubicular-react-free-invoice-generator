@@ -11,6 +11,25 @@ interface InvoiceFormProps {
     secondaryColor: string;
 }
 
+interface CompanyInfo {
+    companyName: string;
+    yourName: string;
+    companyAddress: string;
+    cityStateZip: string;
+    country: string;
+}
+
+interface ClientInfo {
+    clientName: string;
+    clientAddress: string;
+    clientCityStateZip: string;
+    clientCountry: string;
+    clientAdditionalInfo: string;
+    invoiceNumber: string;
+    date: string;
+    dueDate: string;
+}
+
 export default function InvoiceForm({ primaryColor, secondaryColor }: InvoiceFormProps) {
     const { t } = useTranslation();
     const [logo, setLogo] = useState<string | null>(() => {
@@ -31,7 +50,7 @@ export default function InvoiceForm({ primaryColor, secondaryColor }: InvoiceFor
     }, [logo]);
 
     // Company Info State
-    const [companyInfo, setCompanyInfo] = useState(() => {
+    const [companyInfo, setCompanyInfo] = useState<CompanyInfo>(() => {
         const saved = localStorage.getItem('invoice-company-info');
         return saved ? JSON.parse(saved) : {
             companyName: '',
@@ -47,7 +66,7 @@ export default function InvoiceForm({ primaryColor, secondaryColor }: InvoiceFor
     }, [companyInfo]);
 
     // Client & Invoice Meta State
-    const [clientInfo, setClientInfo] = useState(() => {
+    const [clientInfo, setClientInfo] = useState<ClientInfo>(() => {
         const saved = localStorage.getItem('invoice-client-info');
         const defaultState = {
             clientName: '',
