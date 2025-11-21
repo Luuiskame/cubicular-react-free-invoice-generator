@@ -65,6 +65,10 @@ export default function InvoiceLastPart({
     };
 
     const handleRemoveItem = (id: number) => {
+        // Prevent removing the last item
+        if (items.length <= 1) {
+            return;
+        }
         onItemsChange(items.filter(item => item.id !== id));
     };
 
@@ -146,8 +150,12 @@ export default function InvoiceLastPart({
                                 <div className="col-span-1 text-center opacity-0 group-hover:opacity-100 transition-opacity">
                                     <button
                                         onClick={() => handleRemoveItem(item.id)}
-                                        className="text-red-400 hover:text-red-600 p-1 rounded-full hover:bg-red-50 transition-colors"
-                                        title="Remove item"
+                                        disabled={items.length <= 1}
+                                        className={`p-1 rounded-full transition-colors ${items.length <= 1
+                                                ? 'text-gray-300 cursor-not-allowed'
+                                                : 'text-red-400 hover:text-red-600 hover:bg-red-50'
+                                            }`}
+                                        title={items.length <= 1 ? "Cannot remove the last item" : "Remove item"}
                                     >
                                         <Trash2 className="w-5 h-5" />
                                     </button>
@@ -163,7 +171,12 @@ export default function InvoiceLastPart({
                         <div key={item.id} className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm relative">
                             <button
                                 onClick={() => handleRemoveItem(item.id)}
-                                className="absolute top-2 right-2 text-red-400 hover:text-red-600 p-1"
+                                disabled={items.length <= 1}
+                                className={`absolute top-2 right-2 p-1 ${items.length <= 1
+                                        ? 'text-gray-300 cursor-not-allowed'
+                                        : 'text-red-400 hover:text-red-600'
+                                    }`}
+                                title={items.length <= 1 ? "Cannot remove the last item" : "Remove item"}
                             >
                                 <Trash2 className="w-5 h-5" />
                             </button>

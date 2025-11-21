@@ -41,9 +41,10 @@ export default function Navbar({ primaryColor, secondaryColor, onColorChange }: 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div className="flex-shrink-0">
-            <p className="text-2xl font-bold tracking-wider">InvoiceHood</p>
+          <div className="flex-shrink-0 cursor-pointer hover:opacity-80">
+            <img src="/logo.svg" alt="Logo" className="h-12 w-auto" />
           </div>
+
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-4">

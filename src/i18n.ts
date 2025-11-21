@@ -36,7 +36,8 @@ const resources = {
             "addTax": "Add Tax",
             "addItem": "Add Item",
             "notes": "Notes",
-            "notesPlaceholder": "Any relevant information..."
+            "notesPlaceholder": "Any relevant information...",
+            "downloadPDF": "Download PDF"
         }
     },
     es: {
@@ -70,7 +71,8 @@ const resources = {
             "addTax": "Agregar Impuesto",
             "addItem": "Agregar Item",
             "notes": "Notas",
-            "notesPlaceholder": "Cualquier información relevante..."
+            "notesPlaceholder": "Cualquier información relevante...",
+            "downloadPDF": "Descargar PDF"
         }
     },
     fr: {
@@ -104,7 +106,8 @@ const resources = {
             "addTax": "Ajouter une taxe",
             "addItem": "Ajouter un article",
             "notes": "Notes",
-            "notesPlaceholder": "Toute information pertinente..."
+            "notesPlaceholder": "Toute information pertinente...",
+            "downloadPDF": "Télécharger PDF"
         }
     },
     de: {
@@ -138,7 +141,8 @@ const resources = {
             "addTax": "Steuer hinzufügen",
             "addItem": "Artikel hinzufügen",
             "notes": "Notizen",
-            "notesPlaceholder": "Alle relevanten Informationen..."
+            "notesPlaceholder": "Alle relevanten Informationen...",
+            "downloadPDF": "PDF herunterladen"
         }
     },
     it: {
@@ -172,7 +176,8 @@ const resources = {
             "addTax": "Aggiungi Tassa",
             "addItem": "Aggiungi Articolo",
             "notes": "Note",
-            "notesPlaceholder": "Qualsiasi informazione rilevante..."
+            "notesPlaceholder": "Qualsiasi informazione rilevante...",
+            "downloadPDF": "Scarica PDF"
         }
     },
     pt: {
@@ -206,7 +211,8 @@ const resources = {
             "addTax": "Adicionar Imposto",
             "addItem": "Adicionar Item",
             "notes": "Notas",
-            "notesPlaceholder": "Qualquer informação relevante..."
+            "notesPlaceholder": "Qualquer informação relevante...",
+            "downloadPDF": "Baixar PDF"
         }
     },
     zh: {
@@ -240,7 +246,8 @@ const resources = {
             "addTax": "添加税额",
             "addItem": "添加项目",
             "notes": "备注",
-            "notesPlaceholder": "任何相关信息..."
+            "notesPlaceholder": "任何相关信息...",
+            "downloadPDF": "下载 PDF"
         }
     }
 };

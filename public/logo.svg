@@ -1,0 +1,11 @@
+<svg width="500" height="150" viewBox="0 0 500 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g transform="translate(20, 25)">
+        <path d="M50 10L10 50H90L50 10Z" fill="#2563EB"/>
+        <rect x="25" y="45" width="50" height="60" rx="4" fill="#10B981"/>
+        <path d="M50 55C45 55 42 58 42 62C42 68 58 69 58 75C58 79 54 81 50 81M50 81C46 81 42 79 42 75M50 81V85M50 55C54 55 58 57 58 62M50 55V51" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+
+    <text x="130" y="90" font-family="Arial, sans-serif" font-size="60" font-weight="bold" fill="#1F2937">
+        Invoice<tspan fill="#2563EB">Hood</tspan>
+    </text>
+</svg>
