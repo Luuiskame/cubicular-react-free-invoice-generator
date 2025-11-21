@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import InvoiceSecondPart from './InvoiceSecondPart';
+import InvoiceLastPart from './InvoiceLastPart';
 
 
 export default function InvoiceForm() {
@@ -85,6 +86,7 @@ export default function InvoiceForm() {
             </div>
 
             <InvoiceSecondPart />
+            <InvoiceLastPart />
         </div>
     );
 }

@@ -23,7 +23,20 @@ const resources = {
             "invoiceExtraInfo": "Add extra info (e.g. #INV-001)",
             "companyName": "Company Name",
             "yourName": "Your Name",
-            "companyAddress": "Company's Address"
+            "companyAddress": "Company's Address",
+            "item": "Item",
+            "quantity": "Quantity",
+            "price": "Price",
+            "amount": "Amount",
+            "subTotal": "Sub Total",
+            "discount": "Discount",
+            "tax": "Tax",
+            "total": "TOTAL",
+            "addDiscount": "Add Discount",
+            "addTax": "Add Tax",
+            "addItem": "Add Item",
+            "notes": "Notes",
+            "notesPlaceholder": "Any relevant information..."
         }
     },
     es: {
@@ -44,7 +57,20 @@ const resources = {
             "invoiceExtraInfo": "Información extra (ej. #INV-001)",
             "companyName": "Nombre de la Empresa",
             "yourName": "Tu Nombre",
-            "companyAddress": "Dirección de la Empresa"
+            "companyAddress": "Dirección de la Empresa",
+            "item": "Item",
+            "quantity": "Cantidad",
+            "price": "Precio",
+            "amount": "A pagar",
+            "subTotal": "Sub Total",
+            "discount": "Descuento",
+            "tax": "Impuesto",
+            "total": "TOTAL",
+            "addDiscount": "Agregar Descuento",
+            "addTax": "Agregar Impuesto",
+            "addItem": "Agregar Item",
+            "notes": "Notas",
+            "notesPlaceholder": "Cualquier información relevante..."
         }
     }
 };
