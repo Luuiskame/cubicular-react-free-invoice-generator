@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Globe, Palette, Menu, X } from 'lucide-react';
 import ColorPicker from './ColorPicker';
 
@@ -24,10 +24,6 @@ export default function Navbar({ primaryColor, secondaryColor, onColorChange }: 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showLanguageOptions, setShowLanguageOptions] = useState(false);
   const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
-
-  useEffect(() => {
-    document.title = t('Welcome to cubicular');
-  }, [t]);
 
   const toggleLanguage = (lang: string) => {
     i18n.changeLanguage(lang);
