@@ -94,7 +94,7 @@ export default function PrintableInvoice({
     const taxAmount = (subTotal - discountAmount) * (taxVal / 100);
 
     return (
-        <div className="print-invoice" style={{ display: 'none' }}>
+        <div className="print-invoice" id="printable-invoice-root">
             <style>{`
                 @media print {
                     @page {
@@ -129,7 +129,10 @@ export default function PrintableInvoice({
                 
                 @media screen {
                     .print-invoice {
-                        display: none !important;
+                        position: absolute;
+                        left: -9999px;
+                        top: -9999px;
+                        visibility: hidden;
                     }
                 }
                 
@@ -150,9 +153,10 @@ export default function PrintableInvoice({
                 }
                 
                 .print-logo {
-                    width: 150px;
-                    height: 80px;
+                    width: 140px;   
+                    height: 128px; 
                     object-fit: contain;
+                    display: block;
                 }
                 
                 .print-title {
@@ -207,44 +211,80 @@ export default function PrintableInvoice({
                     font-weight: bold;
                 }
                 
-                .print-table {
-                    width: 100%;
+                /* Items section – visually aligned with on-screen form table */
+                .print-items {
                     margin-bottom: 30px;
-                    border-collapse: collapse;
                 }
                 
-                .print-table-header {
+                .print-items-header {
+                    display: grid;
+                    grid-template-columns: 5fr 2fr 2fr 2fr 1fr;
+                    gap: 16px;
                     background-color: ${secondaryColor};
-                    color: white;
-                    padding: 8px;
-                    font-weight: bold;
-                    text-transform: uppercase;
+                    color: #fff;
+                    padding: 12px 16px;
+                    border-radius: 8px 8px 0 0;
+                    font-weight: 600;
                     font-size: 9pt;
+                    text-transform: uppercase;
                 }
                 
-                .print-table-header th {
-                    padding: 8px;
+                .print-items-header div:nth-child(1) {
+                    padding-left: 8px;
                     text-align: left;
                 }
                 
-                .print-table-header th:nth-child(2),
-                .print-table-header th:nth-child(3),
-                .print-table-header th:nth-child(4) {
-                    text-align: right;
+                .print-items-header div:nth-child(2) {
+                    text-align: center;
                 }
                 
-                .print-table-row {
+                .print-items-header div:nth-child(3),
+                .print-items-header div:nth-child(4) {
+                    text-align: right;
+                    padding-right: 8px;
+                }
+                
+                .print-items-header div:nth-child(5) {
+                    text-align: center;
+                }
+                
+                .print-items-body {
+                    border-left: 1px solid #E5E7EB;
+                    border-right: 1px solid #E5E7EB;
                     border-bottom: 1px solid #E5E7EB;
+                    border-radius: 0 0 8px 8px;
+                    overflow: hidden;
                 }
                 
-                .print-table-row td {
-                    padding: 8px;
+                .print-items-row {
+                    display: grid;
+                    grid-template-columns: 5fr 2fr 2fr 2fr 1fr;
+                    gap: 16px;
+                    padding: 12px 16px;
+                    border-top: 1px solid #E5E7EB;
+                    font-size: 10pt;
+                    color: #374151;
                 }
                 
-                .print-table-row td:nth-child(2),
-                .print-table-row td:nth-child(3),
-                .print-table-row td:nth-child(4) {
+                .print-items-row div:nth-child(1) {
+                    text-align: left;
+                }
+                
+                .print-items-row div:nth-child(2) {
+                    text-align: center;
+                }
+                
+                .print-items-row div:nth-child(3) {
                     text-align: right;
+                }
+                
+                .print-items-row div:nth-child(4) {
+                    text-align: right;
+                    font-weight: 600;
+                }
+                
+                .print-items-row div:nth-child(5) {
+                    text-align: center;
                 }
                 
                 .print-summary {
@@ -340,27 +380,27 @@ export default function PrintableInvoice({
                     </div>
                 </div>
 
-                {/* Items Table */}
-                <table className="print-table">
-                    <thead>
-                        <tr className="print-table-header">
-                            <th>{labels.itemDescription}</th>
-                            <th>{labels.quantity}</th>
-                            <th>{labels.price}</th>
-                            <th>{labels.amount}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                {/* Items Section – aligned with InvoiceLastPart desktop table */}
+                <div className="print-items">
+                    <div className="print-items-header">
+                        <div>{labels.itemDescription}</div>
+                        <div>{labels.quantity}</div>
+                        <div>{labels.price}</div>
+                        <div>{labels.amount}</div>
+                        <div>{/* empty column to mirror remove icon col */}</div>
+                    </div>
+                    <div className="print-items-body">
                         {validItems.map((item) => (
-                            <tr key={item.id} className="print-table-row">
-                                <td>{item.description || ''}</td>
-                                <td>{item.quantity ?? 0}</td>
-                                <td>{safeNumber(item.price).toFixed(2)}</td>
-                                <td>{(safeNumber(item.quantity) * safeNumber(item.price)).toFixed(2)}</td>
-                            </tr>
+                            <div key={item.id} className="print-items-row">
+                                <div>{item.description || ''}</div>
+                                <div>{item.quantity ?? 0}</div>
+                                <div>{safeNumber(item.price).toFixed(2)}</div>
+                                <div>{(safeNumber(item.quantity) * safeNumber(item.price)).toFixed(2)}</div>
+                                <div>{/* no delete button on print */}</div>
+                            </div>
                         ))}
-                    </tbody>
-                </table>
+                    </div>
+                </div>
 
                 {/* Summary */}
                 <div className="print-summary">

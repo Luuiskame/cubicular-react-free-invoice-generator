@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Download } from 'lucide-react';
+import html2pdf from 'html2pdf.js';
 import InvoiceSecondPart from './InvoiceSecondPart';
 import InvoiceLastPart, { type InvoiceItem } from './InvoiceLastPart';
 import PrintableInvoice from './PrintableInvoice';
@@ -141,8 +142,23 @@ export default function InvoiceForm({ primaryColor, secondaryColor }: InvoiceFor
     };
 
     const handlePrintPDF = () => {
-        // Trigger print - the CSS @media print will handle showing the invoice
-        window.print();
+        if (!isClient) return;
+
+        const element = document.querySelector('.print-invoice-content') as HTMLElement | null;
+        if (!element) return;
+
+        const filename = `invoice-${clientInfo.invoiceNumber || 'document'}.pdf`;
+
+        html2pdf()
+            .set({
+                margin: [0.5, 0.5, 0.5, 0.5],
+                filename,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+            })
+            .from(element)
+            .save();
     };
 
     return (
@@ -184,7 +200,9 @@ export default function InvoiceForm({ primaryColor, secondaryColor }: InvoiceFor
                         />
                     </div>
                     <div className="mt-1 w-full flex justify-center items-center gap-2">
-                        <label className="text-xs text-gray-400 font-medium uppercase">Currency:</label>
+                        <label className="text-xs text-gray-400 font-medium uppercase">
+                            {t('currency')}:
+                        </label>
                         <input
                             type="text"
                             value={currency}
