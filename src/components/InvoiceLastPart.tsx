@@ -125,7 +125,7 @@ export default function InvoiceLastPart({
                                         value={item.description}
                                         onChange={(e) => handleItemChange(item.id, 'description', e.target.value)}
                                         className="w-full bg-transparent focus:outline-none text-gray-700 placeholder-gray-400"
-                                        placeholder="Item description"
+                                        placeholder={t('itemDescriptionPlaceholder')}
                                     />
                                 </div>
                                 <div className="col-span-2">
@@ -187,7 +187,7 @@ export default function InvoiceLastPart({
                                     value={item.description}
                                     onChange={(e) => handleItemChange(item.id, 'description', e.target.value)}
                                     className="w-full bg-gray-50 border border-gray-200 rounded p-2 focus:outline-none focus:border-blue-500"
-                                    placeholder="Item description"
+                                    placeholder={t('itemDescriptionPlaceholder')}
                                 />
                             </div>
                             <div className="grid grid-cols-2 gap-4">
