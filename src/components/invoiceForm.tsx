@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { PDFDownloadLink } from '@react-pdf/renderer';
 import { Download } from 'lucide-react';
 import InvoiceSecondPart from './InvoiceSecondPart';
 import InvoiceLastPart, { type InvoiceItem } from './InvoiceLastPart';
-import InvoicePDF from './invoicePDF';
+import PrintableInvoice from './PrintableInvoice';
 
 interface InvoiceFormProps {
     primaryColor: string;
@@ -35,11 +34,7 @@ export default function InvoiceForm({ primaryColor, secondaryColor }: InvoiceFor
     const [logo, setLogo] = useState<string | null>(() => {
         return localStorage.getItem('invoice-logo');
     });
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
+    const [isClient] = useState(() => typeof window !== 'undefined');
 
     useEffect(() => {
         if (logo) {
@@ -88,6 +83,7 @@ export default function InvoiceForm({ primaryColor, secondaryColor }: InvoiceFor
 
     useEffect(() => {
         // Save everything except date and dueDate
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { date, dueDate, ...infoToSave } = clientInfo;
         localStorage.setItem('invoice-client-info', JSON.stringify(infoToSave));
     }, [clientInfo]);
@@ -142,6 +138,11 @@ export default function InvoiceForm({ primaryColor, secondaryColor }: InvoiceFor
 
     const handleClientChange = (field: string, value: string) => {
         setClientInfo(prev => ({ ...prev, [field]: value }));
+    };
+
+    const handlePrintPDF = () => {
+        // Trigger print - the CSS @media print will handle showing the invoice
+        window.print();
     };
 
     return (
@@ -261,45 +262,45 @@ export default function InvoiceForm({ primaryColor, secondaryColor }: InvoiceFor
             {/* Download Button */}
             {isClient && (
                 <div className="mt-8 flex justify-end">
-                    <PDFDownloadLink
-                        document={
-                            <InvoicePDF
-                                logo={logo}
-                                companyInfo={companyInfo}
-                                clientInfo={clientInfo}
-                                items={items}
-                                discount={discount}
-                                tax={tax}
-                                discountLabel={discountLabel}
-                                taxLabel={taxLabel}
-                                notes={notes}
-                                title={title}
-                                extraInfo={extraInfo}
-                                currency={currency}
-                                primaryColor={primaryColor}
-                                secondaryColor={secondaryColor}
-                                labels={{
-                                    billTo: t('to'),
-                                    invoiceNumber: t('invoiceNumber'),
-                                    date: t('date'),
-                                    dueDate: t('dueDate'),
-                                    itemDescription: t('item'),
-                                    quantity: t('quantity'),
-                                    price: t('price'),
-                                    amount: t('amount'),
-                                    subTotal: t('subTotal'),
-                                    total: t('total'),
-                                    notes: t('notes')
-                                }}
-                            />
-                        }
-                        fileName="invoice.pdf"
+                    <button
+                        onClick={handlePrintPDF}
                         className="flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-lg hover:opacity-90 transition-colors shadow-md font-medium text-base"
                     >
-                        {({ loading }) => (loading ? 'Generating...' : <><Download className="w-5 h-5" /> {t('downloadPDF')}</>)}
-                    </PDFDownloadLink>
+                        <Download className="w-5 h-5" /> {t('downloadPDF')}
+                    </button>
                 </div>
             )}
+
+            {/* Printable Invoice (Hidden) */}
+            <PrintableInvoice
+                logo={logo}
+                companyInfo={companyInfo}
+                clientInfo={clientInfo}
+                items={items.filter(item => item && typeof item.id === 'number')}
+                discount={discount}
+                tax={tax}
+                discountLabel={discountLabel}
+                taxLabel={taxLabel}
+                notes={notes}
+                title={title}
+                extraInfo={extraInfo}
+                currency={currency}
+                primaryColor={primaryColor}
+                secondaryColor={secondaryColor}
+                labels={{
+                    billTo: t('to'),
+                    invoiceNumber: t('invoiceNumber'),
+                    date: t('date'),
+                    dueDate: t('dueDate'),
+                    itemDescription: t('item'),
+                    quantity: t('quantity'),
+                    price: t('price'),
+                    amount: t('amount'),
+                    subTotal: t('subTotal'),
+                    total: t('total'),
+                    notes: t('notes')
+                }}
+            />
         </div>
     );
 }

@@ -1,0 +1,404 @@
+import type { InvoiceItem } from './InvoiceLastPart';
+
+interface PrintableInvoiceProps {
+    logo: string | null;
+    companyInfo: {
+        companyName: string;
+        yourName: string;
+        companyAddress: string;
+        cityStateZip: string;
+        country: string;
+    };
+    clientInfo: {
+        clientName: string;
+        clientAddress: string;
+        clientCityStateZip: string;
+        clientCountry: string;
+        clientAdditionalInfo: string;
+        invoiceNumber: string;
+        date: string;
+        dueDate: string;
+    };
+    items: InvoiceItem[];
+    discount: string | number;
+    tax: string | number;
+    discountLabel?: string;
+    taxLabel?: string;
+    notes: string;
+    title: string;
+    extraInfo: string;
+    currency: string;
+    primaryColor?: string;
+    secondaryColor?: string;
+    labels: {
+        billTo: string;
+        invoiceNumber: string;
+        date: string;
+        dueDate: string;
+        itemDescription: string;
+        quantity: string;
+        price: string;
+        amount: string;
+        subTotal: string;
+        total: string;
+        notes: string;
+    };
+}
+
+const safeNumber = (value: string | number): number => {
+    const num = Number(value);
+    return Number.isFinite(num) ? num : 0;
+};
+
+export default function PrintableInvoice({
+    logo,
+    companyInfo,
+    clientInfo,
+    items,
+    discount,
+    tax,
+    discountLabel = 'Discount',
+    taxLabel = 'Tax',
+    notes,
+    title,
+    extraInfo,
+    currency,
+    primaryColor = '#1e3a8a',
+    secondaryColor = '#64748b',
+    labels
+}: PrintableInvoiceProps) {
+    // Ensure items is always a valid array
+    const validItems = Array.isArray(items) && items.length > 0
+        ? items.filter(item => item && typeof item.id === 'number')
+        : [{ id: 0, description: '', quantity: 0, price: 0 }];
+
+    const calculateSubTotal = () => {
+        return validItems.reduce((sum, item) => sum + (safeNumber(item.quantity) * safeNumber(item.price)), 0);
+    };
+
+    const calculateTotal = () => {
+        const subTotal = calculateSubTotal();
+        const discountValue = safeNumber(discount);
+        const taxValue = safeNumber(tax);
+
+        const discountAmount = subTotal * (discountValue / 100);
+        const taxAmount = (subTotal - discountAmount) * (taxValue / 100);
+        return subTotal - discountAmount + taxAmount;
+    };
+
+    const subTotal = calculateSubTotal();
+    const total = calculateTotal();
+    const discountVal = safeNumber(discount);
+    const taxVal = safeNumber(tax);
+    const discountAmount = subTotal * (discountVal / 100);
+    const taxAmount = (subTotal - discountAmount) * (taxVal / 100);
+
+    return (
+        <div className="print-invoice" style={{ display: 'none' }}>
+            <style>{`
+                @media print {
+                    @page {
+                        size: A4;
+                        margin: 0.5in;
+                    }
+                    
+                    body * {
+                        visibility: hidden;
+                    }
+                    
+                    .print-invoice,
+                    .print-invoice * {
+                        visibility: visible;
+                    }
+                    
+                    .print-invoice {
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        width: 100%;
+                        padding: 0;
+                        margin: 0;
+                        background: white;
+                        display: block !important;
+                    }
+                    
+                    .no-print {
+                        display: none !important;
+                    }
+                }
+                
+                @media screen {
+                    .print-invoice {
+                        display: none !important;
+                    }
+                }
+                
+                .print-invoice-content {
+                    font-family: 'Helvetica', Arial, sans-serif;
+                    font-size: 10pt;
+                    line-height: 1.5;
+                    color: #333;
+                    max-width: 8.5in;
+                    margin: 0 auto;
+                    padding: 40px;
+                }
+                
+                .print-header {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 30px;
+                }
+                
+                .print-logo {
+                    width: 150px;
+                    height: 80px;
+                    object-fit: contain;
+                }
+                
+                .print-title {
+                    font-size: 24pt;
+                    font-weight: bold;
+                    text-transform: uppercase;
+                    margin-bottom: 5px;
+                }
+                
+                .print-extra-info {
+                    font-size: 10pt;
+                    color: #6B7280;
+                }
+                
+                .print-company-info {
+                    margin-bottom: 30px;
+                }
+                
+                .print-company-name {
+                    font-size: 14pt;
+                    font-weight: bold;
+                    margin-bottom: 2px;
+                }
+                
+                .print-section-two {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 30px;
+                }
+                
+                .print-client-info {
+                    width: 50%;
+                }
+                
+                .print-section-title {
+                    font-size: 11pt;
+                    font-weight: bold;
+                    margin-bottom: 5px;
+                }
+                
+                .print-invoice-meta {
+                    width: 40%;
+                }
+                
+                .print-meta-row {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 5px;
+                }
+                
+                .print-meta-label {
+                    font-weight: bold;
+                }
+                
+                .print-table {
+                    width: 100%;
+                    margin-bottom: 30px;
+                    border-collapse: collapse;
+                }
+                
+                .print-table-header {
+                    background-color: ${secondaryColor};
+                    color: white;
+                    padding: 8px;
+                    font-weight: bold;
+                    text-transform: uppercase;
+                    font-size: 9pt;
+                }
+                
+                .print-table-header th {
+                    padding: 8px;
+                    text-align: left;
+                }
+                
+                .print-table-header th:nth-child(2),
+                .print-table-header th:nth-child(3),
+                .print-table-header th:nth-child(4) {
+                    text-align: right;
+                }
+                
+                .print-table-row {
+                    border-bottom: 1px solid #E5E7EB;
+                }
+                
+                .print-table-row td {
+                    padding: 8px;
+                }
+                
+                .print-table-row td:nth-child(2),
+                .print-table-row td:nth-child(3),
+                .print-table-row td:nth-child(4) {
+                    text-align: right;
+                }
+                
+                .print-summary {
+                    display: flex;
+                    justify-content: space-between;
+                }
+                
+                .print-notes {
+                    width: 50%;
+                    padding-right: 20px;
+                }
+                
+                .print-totals {
+                    width: 40%;
+                }
+                
+                .print-total-row {
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 5px;
+                }
+                
+                .print-grand-total {
+                    display: flex;
+                    justify-content: space-between;
+                    background-color: #F3F4F6;
+                    padding: 10px;
+                    margin-top: 10px;
+                    border-left: 4px solid ${primaryColor};
+                }
+                
+                .print-grand-total-text {
+                    font-size: 12pt;
+                    font-weight: bold;
+                }
+            `}</style>
+            <div className="print-invoice-content">
+                {/* Header */}
+                <div className="print-header">
+                    <div>
+                        {logo && <img src={logo} alt="Logo" className="print-logo" />}
+                    </div>
+                    <div>
+                        <div className="print-title" style={{ color: secondaryColor }}>
+                            {title || 'INVOICE'}
+                        </div>
+                        <div className="print-extra-info">{extraInfo}</div>
+                    </div>
+                </div>
+
+                {/* Company Info */}
+                <div className="print-company-info">
+                    <div className="print-company-name" style={{ color: primaryColor }}>
+                        {companyInfo.companyName}
+                    </div>
+                    <div>{companyInfo.yourName}</div>
+                    <div>{companyInfo.companyAddress}</div>
+                    <div>{companyInfo.cityStateZip}</div>
+                    <div>{companyInfo.country}</div>
+                </div>
+
+                {/* Client & Meta */}
+                <div className="print-section-two">
+                    <div className="print-client-info">
+                        <div className="print-section-title" style={{ color: secondaryColor }}>
+                            {labels.billTo}
+                        </div>
+                        <div>{clientInfo.clientName}</div>
+                        <div>{clientInfo.clientAddress}</div>
+                        <div>{clientInfo.clientCityStateZip}</div>
+                        <div>{clientInfo.clientCountry}</div>
+                        <div>{clientInfo.clientAdditionalInfo}</div>
+                    </div>
+                    <div className="print-invoice-meta">
+                        <div className="print-meta-row">
+                            <span className="print-meta-label" style={{ color: secondaryColor }}>
+                                {labels.invoiceNumber}
+                            </span>
+                            <span>{clientInfo.invoiceNumber}</span>
+                        </div>
+                        <div className="print-meta-row">
+                            <span className="print-meta-label" style={{ color: secondaryColor }}>
+                                {labels.date}
+                            </span>
+                            <span>{clientInfo.date}</span>
+                        </div>
+                        <div className="print-meta-row">
+                            <span className="print-meta-label" style={{ color: secondaryColor }}>
+                                {labels.dueDate}
+                            </span>
+                            <span>{clientInfo.dueDate}</span>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Items Table */}
+                <table className="print-table">
+                    <thead>
+                        <tr className="print-table-header">
+                            <th>{labels.itemDescription}</th>
+                            <th>{labels.quantity}</th>
+                            <th>{labels.price}</th>
+                            <th>{labels.amount}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {validItems.map((item) => (
+                            <tr key={item.id} className="print-table-row">
+                                <td>{item.description || ''}</td>
+                                <td>{item.quantity ?? 0}</td>
+                                <td>{safeNumber(item.price).toFixed(2)}</td>
+                                <td>{(safeNumber(item.quantity) * safeNumber(item.price)).toFixed(2)}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+
+                {/* Summary */}
+                <div className="print-summary">
+                    <div className="print-notes">
+                        <div className="print-section-title" style={{ color: secondaryColor }}>
+                            {labels.notes}:
+                        </div>
+                        <div>{notes}</div>
+                    </div>
+                    <div className="print-totals">
+                        <div className="print-total-row">
+                            <span>{labels.subTotal}</span>
+                            <span>{subTotal.toFixed(2)}</span>
+                        </div>
+                        {discountVal > 0 && (
+                            <div className="print-total-row">
+                                <span>{discountLabel} ({discountVal}%)</span>
+                                <span style={{ color: 'red' }}>-{discountAmount.toFixed(2)}</span>
+                            </div>
+                        )}
+                        {taxVal > 0 && (
+                            <div className="print-total-row">
+                                <span>{taxLabel} ({taxVal}%)</span>
+                                <span>+{taxAmount.toFixed(2)}</span>
+                            </div>
+                        )}
+                        <div className="print-grand-total">
+                            <span className="print-grand-total-text" style={{ color: primaryColor }}>
+                                {labels.total}
+                            </span>
+                            <span className="print-grand-total-text" style={{ color: primaryColor }}>
+                                {currency} {total.toFixed(2)}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
